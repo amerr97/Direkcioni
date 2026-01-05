@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Direkcioni ugao kalkulator - Izračunaj direkcioni ugao i dužinu između dve tačke">
+    <meta name="theme-color" content="#2196F3">
+    <title>Direkcioni ugao</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="icon-192.png">
+</head>
+<body>
+    <div class="container">
+        <h1>Direkcioni ugao</h1>
+        
+        <div class="input-group">
+            <label for="ya">Ya</label>
+            <input type="number" id="ya" step="any" placeholder="Unesi Ya koordinatu" />
+        </div>
+
+        <div class="input-group">
+            <label for="xa">Xa</label>
+            <input type="number" id="xa" step="any" placeholder="Unesi Xa koordinatu" />
+        </div>
+
+        <div class="input-group">
+            <label for="yb">Yb</label>
+            <input type="number" id="yb" step="any" placeholder="Unesi Yb koordinatu" />
+        </div>
+
+        <div class="input-group">
+            <label for="xb">Xb</label>
+            <input type="number" id="xb" step="any" placeholder="Unesi Xb koordinatu" />
+        </div>
+
+        <div class="result">
+            <div class="result-item" id="distance">
+                Dužina je N/A m
+            </div>
+            <div class="result-item" id="angle">
+                Direkcioni ugao: N/A
+            </div>
+        </div>
+
+        <canvas id="graphCanvas" width="400" height="300"></canvas>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>

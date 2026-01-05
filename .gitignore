@@ -1,0 +1,10 @@
+# PWA specific
+.DS_Store
+*.log
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
