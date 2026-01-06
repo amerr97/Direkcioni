@@ -57,4 +57,76 @@ function updateCalculations() {
     const yb = parseFloat(ybInput.value);
     const xb = parseFloat(xbInput.value);
 
-    if (isNaN(ya) || isNaN(xa) || isNaN(yb) ||
+    if (isNaN(ya) || isNaN(xa) || isNaN(yb) || isNaN(xb)) {
+        distanceDisplay.textContent = 'Dužina je N/A m';
+        angleDisplay.textContent = 'Direkcioni ugao: N/A';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    const distance = calculateDistance(ya, xa, yb, xb);
+    const angleRad = calculateDAngle(ya, xa, yb, xb);
+    const angleDMS = convertToDMS(angleRad);
+
+    distanceDisplay.textContent = `Dužina je ${distance.toFixed(3)} m`;
+    angleDisplay.textContent = `Direkcioni ugao: ${angleDMS}`;
+
+    drawGraph(ya, xa, yb, xb);
+}
+
+// ===== CRTANJE =====
+function drawGraph(ya, xa, yb, xb) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const padding = 50;
+    const w = canvas.width - 2 * padding;
+    const h = canvas.height - 2 * padding;
+
+    const minX = Math.min(ya, yb);
+    const maxX = Math.max(ya, yb);
+    const minY = Math.min(xa, xb);
+    const maxY = Math.max(xa, xb);
+
+    const dx = maxX - minX || 1;
+    const dy = maxY - minY || 1;
+
+    const scaleX = w / dx;
+    const scaleY = h / dy;
+
+    const mapX = y => padding + (y - minX) * scaleX;
+    const mapY = x => padding + h - (x - minY) * scaleY;
+
+    const Ax = mapX(ya);
+    const Ay = mapY(xa);
+    const Bx = mapX(yb);
+    const By = mapY(xb);
+
+    // Linija
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(Ax, Ay);
+    ctx.lineTo(Bx, By);
+    ctx.stroke();
+
+    // Tačka A
+    ctx.fillStyle = '#2196F3';
+    ctx.beginPath();
+    ctx.arc(Ax, Ay, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Tačka B
+    ctx.fillStyle = '#F44336';
+    ctx.beginPath();
+    ctx.arc(Bx, By, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#2196F3';
+    ctx.fillText('A', Ax + 10, Ay - 10);
+    ctx.fillStyle = '#F44336';
+    ctx.fillText('B', Bx + 10, By - 10);
+}
+
+// ===== INIT =====
+updateCalculations();
