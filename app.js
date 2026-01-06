@@ -10,12 +10,6 @@ const angleDisplay = document.getElementById('angle');
 const canvas = document.getElementById('graphCanvas');
 const ctx = canvas.getContext('2d');
 
-// ===== FUNKCIJA ZA SIGURNO ČITANJE BROJA =====
-function getNumber(input) {
-    const val = parseFloat(input.value);
-    return isNaN(val) ? null : val;
-}
-
 // ===== TASTATURA (ENTER) =====
 yaInput.addEventListener('keydown', e => { if (e.key === 'Enter') xaInput.focus(); });
 xaInput.addEventListener('keydown', e => { if (e.key === 'Enter') ybInput.focus(); });
@@ -41,8 +35,6 @@ function calculateDAngle(ya, xa, yb, xb) {
 }
 
 function convertToDMS(angleRad) {
-    if (angleRad === null) return 'N/A';
-
     let degTotal = angleRad * 180 / Math.PI;
     let deg = Math.floor(degTotal);
     let minFloat = (degTotal - deg) * 60;
@@ -57,17 +49,11 @@ function convertToDMS(angleRad) {
 
 // ===== GLAVNA FUNKCIJA =====
 function updateCalculations() {
-    const ya = getNumber(yaInput);
-    const xa = getNumber(xaInput);
-    const yb = getNumber(ybInput);
-    const xb = getNumber(xbInput);
-
-    if (ya === null || xa === null || yb === null || xb === null) {
-        distanceDisplay.textContent = 'Dužina je N/A m';
-        angleDisplay.textContent = 'Direkcioni ugao: N/A';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        return;
-    }
+    // Ako je prazno polje, tretiraj kao 0
+    const ya = parseFloat(yaInput.value) || 0;
+    const xa = parseFloat(xaInput.value) || 0;
+    const yb = parseFloat(ybInput.value) || 0;
+    const xb = parseFloat(xbInput.value) || 0;
 
     const distance = calculateDistance(ya, xa, yb, xb);
     const angleRad = calculateDAngle(ya, xa, yb, xb);
