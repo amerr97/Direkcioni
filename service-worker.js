@@ -1,6 +1,6 @@
 const CACHE_NAME = 'direkcioni-uga-v1';
 const urlsToCache = [
-  '/',
+  '/Direkcioni/',
   '/index.html',
   '/styles.css',
   '/app.js',
@@ -67,3 +67,4 @@ self.addEventListener('activate', (event) => {
     })
   );
 });
+
