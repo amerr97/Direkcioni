@@ -2,7 +2,7 @@
   "name": "Direkcioni ugao",
   "short_name": "Direkcioni",
   "description": "Kalkulator za izračunavanje direktnog ugla i dužine između dve tačke",
-  "start_url": "/",
+  "start_url": "/Direkcioni/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196F3",
@@ -22,3 +22,4 @@
     }
   ]
 }
+
