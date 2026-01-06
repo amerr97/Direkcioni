@@ -10,6 +10,12 @@ const angleDisplay = document.getElementById('angle');
 const canvas = document.getElementById('graphCanvas');
 const ctx = canvas.getContext('2d');
 
+// ===== FUNKCIJA ZA SIGURNO ČITANJE BROJA =====
+function getNumber(input) {
+    const val = parseFloat(input.value);
+    return isNaN(val) ? null : val;
+}
+
 // ===== TASTATURA (ENTER) =====
 yaInput.addEventListener('keydown', e => { if (e.key === 'Enter') xaInput.focus(); });
 xaInput.addEventListener('keydown', e => { if (e.key === 'Enter') ybInput.focus(); });
@@ -23,14 +29,14 @@ xbInput.addEventListener('keydown', e => { if (e.key === 'Enter') xbInput.blur()
 
 // ===== MATEMATIKA =====
 function calculateDistance(ya, xa, yb, xb) {
-    const dY = yb - ya;
-    const dX = xb - xa;
-    return Math.sqrt(dY * dY + dX * dX);
+    const deltaY = yb - ya;
+    const deltaX = xb - xa;
+    return Math.sqrt(deltaY*deltaY + deltaX*deltaX);
 }
 
 function calculateDAngle(ya, xa, yb, xb) {
-    let angle = Math.atan2(yb - ya, xb - xa); // svi kvadranti
-    if (angle < 0) angle += 2 * Math.PI;
+    let angle = Math.atan2(yb - ya, xb - xa); // atan2 uzima sve kvadrante
+    if (angle < 0) angle += 2*Math.PI;
     return angle;
 }
 
@@ -38,7 +44,6 @@ function convertToDMS(angleRad) {
     if (angleRad === null) return 'N/A';
 
     let degTotal = angleRad * 180 / Math.PI;
-
     let deg = Math.floor(degTotal);
     let minFloat = (degTotal - deg) * 60;
     let min = Math.floor(minFloat);
@@ -52,18 +57,20 @@ function convertToDMS(angleRad) {
 
 // ===== GLAVNA FUNKCIJA =====
 function updateCalculations() {
-    const ya = parseFloat(yaInput.value);
-    const xa = parseFloat(xaInput.value);
-    const yb = parseFloat(ybInput.value);
-    const xb = parseFloat(xbInput.value);
+    const ya = getNumber(yaInput);
+    const xa = getNumber(xaInput);
+    const yb = getNumber(ybInput);
+    const xb = getNumber(xbInput);
 
-    if (isNaN(ya) || isNaN(xa) || isNaN(yb) || isNaN(xb)) {
+    // Ako bilo šta nije uneseno
+    if (ya === null || xa === null || yb === null || xb === null) {
         distanceDisplay.textContent = 'Dužina je N/A m';
         angleDisplay.textContent = 'Direkcioni ugao: N/A';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
         return;
     }
 
+    // Računanje
     const distance = calculateDistance(ya, xa, yb, xb);
     const angleRad = calculateDAngle(ya, xa, yb, xb);
     const angleDMS = convertToDMS(angleRad);
@@ -76,11 +83,11 @@ function updateCalculations() {
 
 // ===== CRTANJE =====
 function drawGraph(ya, xa, yb, xb) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     const padding = 50;
-    const w = canvas.width - 2 * padding;
-    const h = canvas.height - 2 * padding;
+    const w = canvas.width - 2*padding;
+    const h = canvas.height - 2*padding;
 
     const minX = Math.min(ya, yb);
     const maxX = Math.max(ya, yb);
@@ -90,8 +97,8 @@ function drawGraph(ya, xa, yb, xb) {
     const dx = maxX - minX || 1;
     const dy = maxY - minY || 1;
 
-    const scaleX = w / dx;
-    const scaleY = h / dy;
+    const scaleX = w/dx;
+    const scaleY = h/dy;
 
     const mapX = y => padding + (y - minX) * scaleX;
     const mapY = x => padding + h - (x - minY) * scaleY;
@@ -109,24 +116,8 @@ function drawGraph(ya, xa, yb, xb) {
     ctx.lineTo(Bx, By);
     ctx.stroke();
 
-    // Tačka A
+    // Tačke
     ctx.fillStyle = '#2196F3';
     ctx.beginPath();
-    ctx.arc(Ax, Ay, 8, 0, Math.PI * 2);
+    ctx.arc(Ax, Ay, 8, 0, 2*Math.PI);
     ctx.fill();
-
-    // Tačka B
-    ctx.fillStyle = '#F44336';
-    ctx.beginPath();
-    ctx.arc(Bx, By, 8, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#2196F3';
-    ctx.fillText('A', Ax + 10, Ay - 10);
-    ctx.fillStyle = '#F44336';
-    ctx.fillText('B', Bx + 10, By - 10);
-}
-
-// ===== INIT =====
-updateCalculations();
