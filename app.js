@@ -62,15 +62,13 @@ function updateCalculations() {
     const yb = getNumber(ybInput);
     const xb = getNumber(xbInput);
 
-    // Ako bilo šta nije uneseno
     if (ya === null || xa === null || yb === null || xb === null) {
         distanceDisplay.textContent = 'Dužina je N/A m';
         angleDisplay.textContent = 'Direkcioni ugao: N/A';
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         return;
     }
 
-    // Računanje
     const distance = calculateDistance(ya, xa, yb, xb);
     const angleRad = calculateDAngle(ya, xa, yb, xb);
     const angleDMS = convertToDMS(angleRad);
@@ -121,3 +119,19 @@ function drawGraph(ya, xa, yb, xb) {
     ctx.beginPath();
     ctx.arc(Ax, Ay, 8, 0, 2*Math.PI);
     ctx.fill();
+
+    ctx.fillStyle = '#F44336';
+    ctx.beginPath();
+    ctx.arc(Bx, By, 8, 0, 2*Math.PI);
+    ctx.fill();
+
+    // Tekst
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#2196F3';
+    ctx.fillText('A', Ax+10, Ay-10);
+    ctx.fillStyle = '#F44336';
+    ctx.fillText('B', Bx+10, By-10);
+}
+
+// ===== INIT =====
+updateCalculations();
